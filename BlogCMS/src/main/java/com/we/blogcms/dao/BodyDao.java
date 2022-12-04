@@ -19,7 +19,14 @@ public interface BodyDao {
      * @param Body object to save to the database
      * @return Body added to the database, null otherwise
      */
-    public Body addBody();
+    public Body addBody(Body body);
+    /**
+     * Retrieves all post bodies from the database
+     *
+     * @param none
+     * @return List<Body> list of Body instances from the database
+     */
+    public List<Body> getAllPostBodies();
     //Don't need getAllBody's method
     /**
      * Retrieves a (post) Body from the database
@@ -36,7 +43,7 @@ public interface BodyDao {
      * @return Body object instance representing body deleted from the 
      * database, null if no body was deleted
      */
-    public Body deleteBodyById(int bodyId);
+    public void deleteBodyById(int bodyId);
     /**
      * Updates a body within the database
      *

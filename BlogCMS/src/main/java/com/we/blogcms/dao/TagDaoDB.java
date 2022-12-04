@@ -26,10 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TagDaoDB implements TagDao {
     @Autowired
     JdbcTemplate jdbc;
-//    private int tagId;
-//    private String tag;
-//    private LocalDateTime createdAt;
-//    private Status status;
+
     @Override
     @Transactional
     public Tag addTag(Tag tag) {
