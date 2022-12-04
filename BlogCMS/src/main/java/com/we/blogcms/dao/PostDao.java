@@ -20,7 +20,7 @@ public interface PostDao {
      * @param Post object to save to the database
      * @return Post added to the database, null otherwise
      */
-    public Post createPost();
+    public Post addPost();
     /**
      * Retrieves all posts (active, inactive, and pending) from the database
      *

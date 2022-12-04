@@ -16,7 +16,7 @@ public class Tag {
     private String tag;
     private LocalDateTime createdAt;
     private Status status;
-
+    
     public int getTagId() {
         return tagId;
     }

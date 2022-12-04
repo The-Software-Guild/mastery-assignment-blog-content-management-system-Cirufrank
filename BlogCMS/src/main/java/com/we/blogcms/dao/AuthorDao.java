@@ -18,7 +18,7 @@ public interface AuthorDao {
      * @param Author object to save to the database
      * @return Author added to the database, null otherwise
      */
-    public Author createAuthor();
+    public Author addAuthor();
     /**
      * Retrieves all authors from the database
      *

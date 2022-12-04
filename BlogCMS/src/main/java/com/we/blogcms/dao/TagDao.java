@@ -19,7 +19,7 @@ public interface TagDao {
      * @param Tag object to save to the database
      * @return Tag added to the database, null otherwise
      */
-    public Tag createTag();
+    public Tag addTag(Tag tag);
     /**
      * Retrieves all tags from the database
      *
@@ -42,6 +42,6 @@ public interface TagDao {
      * @return Tag object instance representing tag deleted from the 
      * database, null if no tag was deleted
      */
-    public Tag deleteTagById(int tagId);
+    public void deleteTagById(int tagId);
     //Don't need edit tag method
 }

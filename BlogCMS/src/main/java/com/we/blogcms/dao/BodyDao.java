@@ -19,7 +19,7 @@ public interface BodyDao {
      * @param Body object to save to the database
      * @return Body added to the database, null otherwise
      */
-    public Body createBody();
+    public Body addBody();
     //Don't need getAllBody's method
     /**
      * Retrieves a (post) Body from the database
