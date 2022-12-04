@@ -28,6 +28,16 @@ public interface TagDao {
      */
     public List<Tag> getAllTags();
     /**
+     * Retrieves all tags associated with a post from 
+     * the database
+     *
+     * @param int postId
+     * @return List<Tag> list of tag instances from 
+     * the database that are associated with the 
+     * specified post
+     */
+    public List<Tag> getPostTags(int postId);
+    /**
      * Retrieves a tag from the database
      *
      * @param int tagId

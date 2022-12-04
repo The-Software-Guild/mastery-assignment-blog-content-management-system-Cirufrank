@@ -35,6 +35,14 @@ public interface AuthorDao {
      */
     public Author getAuthorById(int authorId);
     /**
+     * Retrieves the author of a post from the database
+     *
+     * @param int postId
+     * @return Author object instance representing author from the 
+     * database the post is assocaited with
+     */
+    public Author getPostAuthor(int postId);
+    /**
      * Deletes an author from the database
      *
      * @param int authorId

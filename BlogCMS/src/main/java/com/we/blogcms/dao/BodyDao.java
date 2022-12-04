@@ -37,6 +37,15 @@ public interface BodyDao {
      */
     public Body getBodyById(int bodyId);
     /**
+     * Retrieves a (post) Body from the database of the post 
+     * specified
+     *
+     * @param int postId
+     * @return Body object instance representing body from the 
+     * database for post
+     */
+    public Body getPostBody(int postId);
+    /**
      * Deletes a body from the database
      *
      * @param int bodyId

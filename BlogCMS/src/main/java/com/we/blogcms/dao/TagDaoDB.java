@@ -56,10 +56,22 @@ public class TagDaoDB implements TagDao {
     }
     @Override
     public List<Tag> getAllTags() {
-        final String GET_ALL_TAGS_SQL = "SELECT * FROM tag;";
+        final String GET_ALL_TAGS_SQL = "SELECT * FROM tag WHERE status "
+                + "NOT IN ('" + Status.deleted + "');";
         final List<Tag> tags = jdbc.query(GET_ALL_TAGS_SQL, new TagMapper());
         return tags;
     }
+    
+    @Override
+    public List<Tag> getPostTags(int postId) {
+        //Needs testing
+        final String GET_POST_TAGS_SQL = "SELECT * FROM tag t INNER "
+                + "JOIN posttag pt ON t.tagId = pt.tagId WHERE "
+                + "pt.postId = ?";
+        final List<Tag> tagPosts = jdbc.query(GET_POST_TAGS_SQL, new TagMapper(), postId);
+        return tagPosts;
+    }
+    
     @Override
     public void deleteTagById(int tagId) {
         final String DELETE_TAG_BY_ID_SQL = "DELETE FROM tag WHERE tagId = ?;";
