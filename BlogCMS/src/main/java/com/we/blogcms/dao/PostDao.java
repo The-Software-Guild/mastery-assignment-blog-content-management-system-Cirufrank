@@ -6,6 +6,7 @@ package com.we.blogcms.dao;
 
 import com.we.blogcms.model.Author;
 import com.we.blogcms.model.Post;
+import com.we.blogcms.model.Status;
 import com.we.blogcms.model.Tag;
 import java.util.List;
 
@@ -29,13 +30,13 @@ public interface PostDao {
      */
     public List<Post> getAllPosts();
     /**
-     * Retrieves all active posts from the database
+     * Retrieves all posts of the specified status from the database
      *
      * @param none
-     * @return List<Post> list of post instances with an 
-     * active status from the database
+     * @return List<Post> list of post instances with the specified 
+     * status, from the database
      */
-    public List<Post> getAllActivePosts();
+    public List<Post> getPostsForStatus(Status status);
     /**
      * Retrieves the specified amount of active and non-expired posts
      * posts from the databases
@@ -64,22 +65,6 @@ public interface PostDao {
      */
     public List<Post> getShowablePostsByTags(List<Tag> tags);
     /**
-     * Retrieves all pending posts from the database
-     *
-     * @param none
-     * @return List<Post> list of post instances with a
-     * pending status from the database
-     */
-    public List<Post> getAllPendingPosts();
-    /**
-     * Retrieves all inactive posts from the database
-     *
-     * @param none
-     * @return List<Post> list of post instances with an
-     * inactive status from the database
-     */
-    public List<Post> getAllInactivePosts();
-    /**
      * Retrieves an author from the database
      *
      * @param int postId
@@ -94,15 +79,18 @@ public interface PostDao {
      * @return Post object instance representing post deleted from the 
      * database, null if no post was deleted
      */
-    public Post deletePostById(int postId);
-    /**
+    public void deletePostById(int postId);
+     /**
      * Updates a post within the database
      *
      * @param Post post object instance
      * @return Post object instance representing post updated in the 
      * database, null if no post was updated
      */
-    public Author updatePost(Post post);
+    public void updatePost(Post post);
+    //ABOVE FOR TESTING ONLY SINCE WE ONLY DEACTIVATE POSTS WHICH CAN BE DONE 
+    //THROUGH 
+   
 //    /**
 //     * Sets a posts' body object
 //     *
