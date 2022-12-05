@@ -84,10 +84,18 @@ public class BodyDaoDB implements BodyDao {
     }
     
     @Override
+    @Transactional
     public void deleteBodyById(int bodyId) {
+        deletePostBodyById(bodyId);
         final String DELETE_BODY_SQL = "DELETE FROM body WHERE "
                 + "bodyId = ?;";
         jdbc.update(DELETE_BODY_SQL, bodyId);
+    }
+    
+    private void deletePostBodyById(int bodyId) {
+        final String DELETE_POST_BODY_SQL = "DELETE FROM postbody "
+                + "WHERE bodyId = ?;";
+        jdbc.update(DELETE_POST_BODY_SQL, bodyId);
     }
     
     public static class BodyMapper implements RowMapper<Body> {

@@ -5,6 +5,7 @@
 package com.we.blogcms.dao;
 
 import com.we.blogcms.model.Author;
+import com.we.blogcms.model.Status;
 import com.we.blogcms.model.Tag;
 import java.util.List;
 
@@ -28,6 +29,14 @@ public interface TagDao {
      */
     public List<Tag> getAllTags();
     /**
+     * Retrieves all tags from the database of a certain status
+     *
+     * @param Status[] array of statuses the returned tags should 
+     * be in
+     * @return List<Tag> list of tag instances from the database
+     */
+    public List<Tag> getAllTagsForStatuses(Status... statuses);
+    /**
      * Retrieves all tags associated with a post from 
      * the database
      *
@@ -36,7 +45,7 @@ public interface TagDao {
      * the database that are associated with the 
      * specified post
      */
-    public List<Tag> getPostTags(int postId);
+    public List<Tag> getPostTagsForStatuses(int postId, Status... statuses);
     /**
      * Retrieves a tag from the database
      *

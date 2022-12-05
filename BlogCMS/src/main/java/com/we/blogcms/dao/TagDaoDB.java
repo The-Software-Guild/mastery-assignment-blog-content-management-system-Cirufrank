@@ -26,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class TagDaoDB implements TagDao {
     @Autowired
     JdbcTemplate jdbc;
+    
+    @Autowired
+    DaoHelper daoHelper;
 
     @Override
     @Transactional
@@ -56,26 +59,46 @@ public class TagDaoDB implements TagDao {
     }
     @Override
     public List<Tag> getAllTags() {
-        final String GET_ALL_TAGS_SQL = "SELECT * FROM tag WHERE status "
-                + "NOT IN ('" + Status.deleted + "');";
+        final String GET_ALL_TAGS_SQL = "SELECT * FROM tag;";
         final List<Tag> tags = jdbc.query(GET_ALL_TAGS_SQL, new TagMapper());
         return tags;
     }
     
     @Override
-    public List<Tag> getPostTags(int postId) {
+    public List<Tag> getAllTagsForStatuses(Status... statuses) {
+        final String GET_ALL_STATUS_TAGS_SQL = "SELECT * FROM "
+                + "tag WHERE status IN" + daoHelper.createInStatusText(statuses)
+                + ";";
+        
+        final List<Tag> tagsForStatuses = jdbc.query(
+        GET_ALL_STATUS_TAGS_SQL, new TagMapper());
+        return tagsForStatuses;
+    }
+    
+    @Override
+    public List<Tag> getPostTagsForStatuses(int postId, Status... statuses) {
         //Needs testing
         final String GET_POST_TAGS_SQL = "SELECT * FROM tag t INNER "
                 + "JOIN posttag pt ON t.tagId = pt.tagId WHERE "
-                + "pt.postId = ?";
+                + "pt.postId = ? AND p.status IN "
+                + daoHelper.createInStatusText(statuses) + ";";
         final List<Tag> tagPosts = jdbc.query(GET_POST_TAGS_SQL, new TagMapper(), postId);
         return tagPosts;
     }
     
     @Override
+    @Transactional
     public void deleteTagById(int tagId) {
-        final String DELETE_TAG_BY_ID_SQL = "DELETE FROM tag WHERE tagId = ?;";
+        deletePostTagById(tagId);
+        final String DELETE_TAG_BY_ID_SQL = "DELETE FROM tag "
+                + "WHERE tagId = ?;";
         jdbc.update(DELETE_TAG_BY_ID_SQL, tagId);
+    }
+    
+    private void deletePostTagById(int tagId) {
+        final String DELETE_POST_TAG_BY_ID_SQL = "DELETE FROM posttag "
+                + "WHERE tagId = ?;";
+        jdbc.update(DELETE_POST_TAG_BY_ID_SQL, tagId);
     }
     
     public static final class TagMapper implements RowMapper<Tag> {

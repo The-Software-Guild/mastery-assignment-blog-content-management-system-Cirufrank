@@ -23,20 +23,30 @@ public interface PostDao {
      */
     public Post addPost(Post post);
     /**
-     * Retrieves all posts (active, inactive, and pending) from the database
+     * Retrieves all posts from the database
      *
      * @param none
      * @return List<Post> list of post instances from the database
      */
     public List<Post> getAllPosts();
     /**
-     * Retrieves all posts of the specified status from the database
+     * Retrieves all posts (active, inactive, and pending) from the database
+     * that are associated with the author specified
+     *
+     * @param int authorId
+     * @param Status... array of statuses the posts should be in
+     * @return List<Post> list of post instances from the database associated 
+     * with the author specified and that have the statuses specified
+     */
+    public List<Post> getPostsForAuthor(int authorId, Status... statuses);
+    /**
+     * Retrieves all posts of the specified statuses from the database
      *
      * @param none
      * @return List<Post> list of post instances with the specified 
-     * status, from the database
+     * statuses, from the database
      */
-    public List<Post> getPostsForStatus(Status status);
+    public List<Post> getAllPostsForStatuses(Status... statuses);
     /**
      * Retrieves the specified amount of active and non-expired posts
      * posts from the databases
@@ -45,25 +55,18 @@ public interface PostDao {
      * @return List<Post> list of specified latest post instances 
      * from the database
      */
-    public List<Post> getLatestShowablePosts(int numOfPosts);
+    public List<Post> getLatestPostsForStatuses(int numOfPosts, Status... statuses);
     /**
-     * Retrieves all active, non-expired posts from the database,
-     * ordered from most recent to oldest
-     *
-     * @param none
-     * @return List<Post> list of all showable posts from the 
-     * database
-     */
-    public List<Post> getShowablePosts();
-    /**
-     * Retrieves all active, non-expired posts from the database that 
+     * Retrieves all posts of the statuses specified from the database that 
      * have the tag(s) specified ordered from most recent to oldest
      *
-     * @param none
-     * @return List<Post> list of all showable posts from the 
-     * database that match the tags specified
+     * @param List<Tag> list of tags to match
+     * @param Status[]... array of statuses the posts must be in
+     * @return List<Post> list of all posts from the 
+     * database that match the tags specified and have the statuses
+     * specified
      */
-    public List<Post> getShowablePostsByTags(List<Tag> tags);
+    public List<Post> getPostsForStatusesByTags(List<Tag> tags, Status... statuses);
     /**
      * Retrieves an author from the database
      *
@@ -75,11 +78,12 @@ public interface PostDao {
     /**
      * Gives post in the database a status of deleted
      *
-     * @param int postId
+     * @param Post post object to delete assocaited information 
+     * from the database
      * @return Post object instance representing post deleted from the 
      * database, null if no post was deleted
      */
-    public void deletePostById(int postId);
+    public void deletePost(Post post);
      /**
      * Updates a post within the database
      *

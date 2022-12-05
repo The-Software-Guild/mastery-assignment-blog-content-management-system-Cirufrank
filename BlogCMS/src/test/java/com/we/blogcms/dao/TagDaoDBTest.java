@@ -5,6 +5,7 @@
 package com.we.blogcms.dao;
 
 import com.we.blogcms.TestApplicationConfiguration;
+import com.we.blogcms.model.Status;
 import com.we.blogcms.model.Tag;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -78,6 +79,20 @@ public class TagDaoDBTest {
         for (int index = 0; index < tags.size(); index += 1) {
             final Tag actualTag = tags.get(index);
             final Tag testTag = allTags.get(index);
+            assertEquals(actualTag.getTag(), testTag.getTag());
+        }
+    }
+    
+    @Test
+    public void testGetAllTagsForStatuses(List<Tag> tags) {
+        for (Tag tag: tags) {
+            tagDao.addTag(tag);
+        }
+        final List<Tag> allActiveTags = tagDao.getAllTagsForStatuses(Status.active);
+        assertEquals(tags.size(), allActiveTags.size());
+        for (int index = 0; index < tags.size(); index += 1) {
+            final Tag actualTag = tags.get(index);
+            final Tag testTag = allActiveTags.get(index);
             assertEquals(actualTag.getTag(), testTag.getTag());
         }
     }

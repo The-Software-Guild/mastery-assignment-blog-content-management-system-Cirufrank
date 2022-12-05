@@ -5,6 +5,7 @@
 package com.we.blogcms.dao;
 
 import com.we.blogcms.model.Author;
+import com.we.blogcms.model.Status;
 import java.util.List;
 
 /**
@@ -27,6 +28,13 @@ public interface AuthorDao {
      */
     public List<Author> getAllAuthors();
     /**
+     * Retrieves all authors from the database
+     *
+     * @param none
+     * @return List<Author> list of author instances from the database
+     */
+    public List<Author> getAllAuthorsForStatuses(Status... statuses);
+    /**
      * Retrieves an author from the database
      *
      * @param int authorId
@@ -39,17 +47,27 @@ public interface AuthorDao {
      *
      * @param int postId
      * @return Author object instance representing author from the 
-     * database the post is assocaited with
+     * database the post is associated with
      */
     public Author getPostAuthor(int postId);
     /**
-     * Deletes an author from the database
+     * Deletes an author from the database along with 
+     * their associated data
      *
-     * @param int authorId
-     * @return Author object instance representing author deleted from the 
-     * database, null if no author was deleted
+     * @param Author object instance representing an author 
+     * and their assocaited data
+     * @return void
      */
-    public Author deleteAuthorById(int authorId);
+    public void deleteAuthor(Author author);
+    /**
+     * Sets an author's status to deleted within the
+     * database and does so for their posts as well
+     *
+     * @param Author object instance representing an 
+     * author to deactivate
+     * @return void
+     */
+    public void deactivateAuthor(Author author);
     /**
      * Updates an author within the database
      *
@@ -57,7 +75,7 @@ public interface AuthorDao {
      * @return Author object instance representing author updated in the 
      * database, null if no author was updated
      */
-    public Author updateAuthor(Author author);
+    public void updateAuthor(Author author);
 //    /**
 //     * Sets the posts for an author 
 //     *
