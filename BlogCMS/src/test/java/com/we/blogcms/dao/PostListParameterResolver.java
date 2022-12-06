@@ -55,7 +55,7 @@ public class PostListParameterResolver implements ParameterResolver {
         
         
         
-        post1.setActivationDate(LocalDateTime.now());
+        post1.setActivationDate(LocalDateTime.now().minusMinutes(2));
         post1.setExpirationDate(LocalDateTime.now().plusMonths(2));
         post2.setActivationDate(LocalDateTime.now().plusMonths(2));
         post2.setExpirationDate(LocalDateTime.now().plusMonths(3));
