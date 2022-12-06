@@ -42,6 +42,7 @@ public class PostListParameterResolver implements ParameterResolver {
         postList.add(post1);
         postList.add(post2);
         postList.add(post3);
+        postList.add(post4);
         post1.setTitle("This is a test title 1");
         post2.setTitle("This is a test title 2");
         post3.setTitle("This is a test title  3");
@@ -64,6 +65,7 @@ public class PostListParameterResolver implements ParameterResolver {
         post1.setStatus(Status.deleted);
         post2.setStatus(Status.active);
         post3.setStatus(Status.inactive);
+        post4.setStatus(Status.pending);
         
         return postList;
     }

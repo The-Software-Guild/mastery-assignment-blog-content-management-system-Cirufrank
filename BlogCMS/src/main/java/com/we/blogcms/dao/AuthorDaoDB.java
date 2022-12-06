@@ -101,7 +101,7 @@ public class AuthorDaoDB implements AuthorDao {
                 + "author;";
         final List<Author> allAuthors = jdbc.query(
                 GET_ALL_AUTHORS_SQL, new AuthorMapper());
-        setPostsForAuthors(allAuthors);
+        setPostsForAllAuthorsTesting(allAuthors);
         return allAuthors;
     }
     
@@ -153,14 +153,27 @@ public class AuthorDaoDB implements AuthorDao {
     
     private void setPostsForAuthor(Author author) {
         final List<Post> postsForAuthor = postDao.getPostsForAuthor(
-                author.getAuthorId(), Status.active,Status.deleted,
+                author.getAuthorId(), Status.active,Status.pending,
                 Status.inactive);
+        author.setPosts(postsForAuthor);
+    }
+    
+    private void setPostsForAuthorTesting(Author author) {
+        final List<Post> postsForAuthor = postDao.getPostsForAuthor(
+                author.getAuthorId(), Status.active,Status.pending,
+                Status.inactive, Status.deleted);
         author.setPosts(postsForAuthor);
     }
     
     private void setPostsForAuthors(List<Author> authors) {
         for (Author author: authors) {
             setPostsForAuthor(author);
+        }
+    }
+    
+    private void setPostsForAllAuthorsTesting(List<Author> authors) {
+        for (Author author: authors) {
+            setPostsForAuthorTesting(author);
         }
     }
     
