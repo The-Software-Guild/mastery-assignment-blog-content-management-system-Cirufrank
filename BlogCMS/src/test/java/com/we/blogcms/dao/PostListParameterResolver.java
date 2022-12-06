@@ -4,25 +4,33 @@
  */
 package com.we.blogcms.dao;
 
+import com.we.blogcms.TestApplicationConfiguration;
 import com.we.blogcms.model.Post;
 import com.we.blogcms.model.Status;
+import com.we.blogcms.model.Tag;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 
 /**
  *
  * @author ciruf
  */
+
 public class PostListParameterResolver implements ParameterResolver {
+    
     final List<Post> postList = new ArrayList<>();
     final Post post1 = new Post();
     final Post post2 = new Post();
     final Post post3 = new Post();
     final Post post4 = new Post();
+    
     
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
@@ -31,6 +39,9 @@ public class PostListParameterResolver implements ParameterResolver {
     
     @Override
     public List<Post> resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        postList.add(post1);
+        postList.add(post2);
+        postList.add(post3);
         post1.setTitle("This is a test title 1");
         post2.setTitle("This is a test title 2");
         post3.setTitle("This is a test title  3");

@@ -78,9 +78,9 @@ public class TagDaoDB implements TagDao {
     @Override
     public List<Tag> getPostTagsForStatuses(int postId, Status... statuses) {
         //Needs testing
-        final String GET_POST_TAGS_SQL = "SELECT * FROM tag t INNER "
+        final String GET_POST_TAGS_SQL = "SELECT t.* FROM tag t INNER "
                 + "JOIN posttag pt ON t.tagId = pt.tagId WHERE "
-                + "pt.postId = ? AND p.status IN "
+                + "pt.postId = ? AND t.status IN "
                 + daoHelper.createInStatusText(statuses) + ";";
         final List<Tag> tagPosts = jdbc.query(GET_POST_TAGS_SQL, new TagMapper(), postId);
         return tagPosts;

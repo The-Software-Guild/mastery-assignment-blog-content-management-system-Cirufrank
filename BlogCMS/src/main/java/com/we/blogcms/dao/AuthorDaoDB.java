@@ -137,7 +137,6 @@ public class AuthorDaoDB implements AuthorDao {
                 + "a.authorId = pa.authorId WHERE postId = ?;";
         final Author postAuthor = jdbc.queryForObject(
                 GET_POST_AUTHOR_SQL, new AuthorMapper(), postId);
-        setPostsForAuthor(postAuthor);
         return postAuthor;
     }
     
@@ -154,7 +153,8 @@ public class AuthorDaoDB implements AuthorDao {
     
     private void setPostsForAuthor(Author author) {
         final List<Post> postsForAuthor = postDao.getPostsForAuthor(
-                author.getAuthorId());
+                author.getAuthorId(), Status.active,Status.deleted,
+                Status.inactive);
         author.setPosts(postsForAuthor);
     }
     

@@ -12,6 +12,8 @@ import com.we.blogcms.model.Status;
 import com.we.blogcms.model.Tag;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,17 +52,20 @@ public class PostDaoDB implements PostDao {
     @Override
     @Transactional
     public Post addPost(Post post) {
-        updatePostTags(post);
-        final String ADD_POST_SQL = "INSERT INTO post (status,"
+        final String ADD_POST_SQL = "INSERT INTO post(status,"
                 + "activationDate,expirationDate,title,"
-                + "headline) VALUES (" + post.getStatus() + daoHelper.DELIMITER 
-                        + post.getActivationDate() + daoHelper.DELIMITER + 
-                        post.getExpirationDate() + daoHelper.DELIMITER + 
-                        post.getTitle() + daoHelper.DELIMITER + 
-                        post.getHeadline() + ")";
+                + "headline) VALUES(" + daoHelper.SINGLE_QUOTE + post.getStatus() + daoHelper.SINGLE_QUOTE + daoHelper.DELIMITER
+                + daoHelper.SINGLE_QUOTE + Timestamp.valueOf(post.getActivationDate()) + daoHelper.SINGLE_QUOTE + daoHelper.DELIMITER 
+                + daoHelper.SINGLE_QUOTE + Timestamp.valueOf(post.getExpirationDate()) + daoHelper.SINGLE_QUOTE + daoHelper.DELIMITER 
+                + daoHelper.SINGLE_QUOTE + post.getTitle() + daoHelper.SINGLE_QUOTE + daoHelper.DELIMITER
+                + daoHelper.SINGLE_QUOTE + post.getHeadline() + daoHelper.SINGLE_QUOTE + ");";
         jdbc.update(ADD_POST_SQL);
         int postId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         post.setPostId(postId);
+        updatePostTags(post);
+        addPostBody(post.getBody().getBodyId(), post.getPostId());
+        addPostAuthor(post.getAuthor().getAuthorId(), post.getPostId());
+        post = getPostById(post.getPostId());
         return post;
     }
     
@@ -197,12 +202,19 @@ public class PostDaoDB implements PostDao {
     }
     
     private void updatePostTags(Post post) {
-        removedNeededPostTags(post);
-        final List<Tag> existingPostTags = getcurrentPostTags(post);
-        final List<Tag> tagsToAdd = getTagsToAdd(post.getTags(), 
-                existingPostTags);
+        List<Tag> tagsToAdd = new ArrayList<>();
+        if (post.getTags() == null) return;
+        if (post.getTags().size() != 0) {
+            removedNeededPostTags(post);
+            final List<Tag> existingPostTags = getcurrentPostTags(post);
+            tagsToAdd = getTagsToAdd(post.getTags(), 
+                    existingPostTags);
+        } else {
+                tagsToAdd = post.getTags();
+        }
         addNewPostTags(tagsToAdd, post.getPostId());
     }
+    
     
     private void addNewPostTags(List<Tag> tagsToAdd, int postId) {
         for (Tag tag: tagsToAdd) {
@@ -215,10 +227,22 @@ public class PostDaoDB implements PostDao {
                 + "VALUES(?,?);";
         jdbc.update(ADD_TAG_SQL, tagId, postId);
     }
+    
+    private void addPostBody(int bodyId, int postId) {
+        final String ADD_BODY_SQL = "INSERT INTO postbody(bodyId,postId) "
+                + "VALUES(?,?);";
+        jdbc.update(ADD_BODY_SQL, bodyId, postId);
+    }
+    
+    private void addPostAuthor(int authorId, int postId) {
+        final String ADD_AUTHOR_SQL = "INSERT INTO postauthor(authorId,postId) "
+                + "VALUES(?,?);";
+        jdbc.update(ADD_AUTHOR_SQL, authorId, postId);
+    }
             
     private void removedNeededPostTags(Post post) {
         final String UPDATE_POST_TAGS_SQL = "DELETE FROM posttag pt"
-                + "WHERE pt.postId = ? AND pt.tagId NOT IN " + 
+                + " WHERE pt.postId = ? AND pt.tagId NOT IN " + 
                 createNotInTagIdText(post.getTags()) + ";";
         jdbc.update(UPDATE_POST_TAGS_SQL, post.getPostId());
     }
@@ -226,7 +250,7 @@ public class PostDaoDB implements PostDao {
     private List<Tag> getcurrentPostTags(Post post) {
         final String CURRENT_POST_TAGS_SQL = "SELECT t.* FROM "
                 + "tag t INNER JOIN posttag pt ON t.tagId = pt.tagId "
-                + "AND p.postId = ?;";
+                + "AND pt.postId = ?;";
         final List<Tag> currentTags = jdbc.query(CURRENT_POST_TAGS_SQL, 
                 new TagMapper(), post.getPostId());
         return currentTags;
@@ -256,7 +280,7 @@ public class PostDaoDB implements PostDao {
     }
     
     private void setTagsForPost(Post post) {
-        final List<Tag> postTags = tagDao.getPostTagsForStatuses(post.getPostId(),Status.active);
+        final List<Tag> postTags = tagDao.getPostTagsForStatuses(post.getPostId(),Status.active, Status.deleted);
         post.setTags(postTags);
     }
     private void setBodyForPost(Post post) {

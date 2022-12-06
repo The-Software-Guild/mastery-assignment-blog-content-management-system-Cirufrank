@@ -60,9 +60,9 @@ public class BodyDaoDB implements BodyDao {
     @Override
     public Body getPostBody(int postId) {
         //NEEDS TO BE TESTED
-        final String GET_POST_BODY_SQL = "SELECT p.* FROM body b INNER JOIN "
+        final String GET_POST_BODY_SQL = "SELECT b.* FROM body b INNER JOIN "
                 + "postbody pb ON b.bodyId = pb.bodyId WHERE "
-                + "p.postId = ?;";
+                + "pb.postId = ?;";
         final Body postBody = jdbc.queryForObject(GET_POST_BODY_SQL, new BodyMapper(), postId);
         return postBody;
     }

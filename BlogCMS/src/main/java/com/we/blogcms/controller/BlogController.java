@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  *
  * @author ciruf
+ * 
+ * This controller is for the public being able to view blogs, filter
+ * for blogs with tags, and look at specific blogs
  */
 @Controller
 @RequestMapping("/blog")
