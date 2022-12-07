@@ -14,6 +14,7 @@ import com.we.blogcms.model.Status;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,15 +55,18 @@ public class AuthorDaoDB implements AuthorDao {
     
     @Override
     public void updateAuthor(Author author) {
+        for (Post post: author.getPosts()) {
+            postDao.updatePost(post);
+        }
         final String UPDATE_AUTHOR_SQL = "UPDATE author SET "
                 + "status = ?, firstName = ?, lastName = ?, role = ?,"
                 + " displayName = ?, email = ?, password = ? "
                 + "WHERE authorId = ?";
         jdbc.update(UPDATE_AUTHOR_SQL, 
-                author.getStatus(),
+                author.getStatus().toString(),
                 author.getFirstName(), 
                 author.getLastName(),
-                author.getRole(),
+                author.getRole().toString(),
                 author.getDisplayName(),
                 author.getEmail(),
                 author.getPassword(), 
@@ -89,7 +93,12 @@ public class AuthorDaoDB implements AuthorDao {
     }
     
     private void deleteAuthorPosts(Author author) {
-        for (Post post: author.getPosts()) {
+        final List<Post> allPostsForAuthor = postDao.getPostsForAuthor(
+                author.getAuthorId(), Status.active,
+                Status.deleted,
+                Status.inactive,
+                Status.pending);
+        for (Post post: allPostsForAuthor) {
             postDao.deletePost(post);
         }
     }
@@ -121,12 +130,16 @@ public class AuthorDaoDB implements AuthorDao {
     @Override
     @Transactional
     public Author getAuthorById(int authorId) {
-        final String GET_AUTHOR_BY_ID_SQL = "SELECT * FROM "
+        try {
+            final String GET_AUTHOR_BY_ID_SQL = "SELECT * FROM "
                 + "author WHERE authorId = ?;";
-        final Author author = jdbc.queryForObject(GET_AUTHOR_BY_ID_SQL, 
-                new AuthorMapper(), authorId);
-        setPostsForAuthor(author);
-        return author;
+            final Author author = jdbc.queryForObject(GET_AUTHOR_BY_ID_SQL, 
+                    new AuthorMapper(), authorId);
+            setPostsForAuthor(author);
+            return author;
+        } catch(DataAccessException error) {
+            return null;
+        }
     }
     
     @Override

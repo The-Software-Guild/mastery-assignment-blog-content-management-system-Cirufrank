@@ -208,6 +208,7 @@ public class PostDaoDB implements PostDao {
     @Transactional
     public void updatePost(Post post) {
         updatePostTags(post);
+        bodyDao.updateBody(post.getBody());
         final String UPDATE_POST_STATUS_SQL = "UPDATE post "
                 + "SET status = ?, title = ?, headline = ?, "
                 + "activationDate = ?, expirationDate = ? "
